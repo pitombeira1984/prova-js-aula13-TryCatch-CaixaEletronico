@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Caixa Eletrônico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        select, input, button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        p {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Simulador de Caixa Eletrônico</h1>
+    <select id="operation">
+        <option value="balance">Consultar Saldo</option>
+        <option value="withdraw">Sacar</option>
+        <option value="deposit">Depositar</option>
+    </select>
+    <input type="number" id="amount" placeholder="Digite o valor" />
+    <button onclick="performOperation()">Realizar</button>
+    <p id="result"></p>
+</div>
+
+<script>
+    let balance = 1000;
+
+    function performOperation() {
+        const operation = document.getElementById('operation').value;
+        const amount = parseFloat(document.getElementById('amount').value);
+        const result = document.getElementById('result');
+
+        try {
+            if (isNaN(amount) || amount < 0) {
+                throw new Error('Por favor, insira um valor válido.');
+            }
+
+            switch(operation) {
+                case 'balance':
+                    result.textContent = `Seu saldo é R$ ${balance.toFixed(2)}`;
+                    result.style.color = 'black';
+                    break;
+                case 'withdraw':
+                    if (amount > balance) {
+                        throw new Error('Saldo insuficiente.');
+                    } else {
+                        balance -= amount;
+                        result.textContent = `Você sacou R$ ${amount.toFixed(2)}. Seu novo saldo é R$ ${balance.toFixed(2)}`;
+                        result.style.color = 'black';
+                    }
+                    break;
+                case 'deposit':
+                    balance += amount;
+                    result.textContent = `Você depositou R$ ${amount.toFixed(2)}. Seu novo saldo é R$ ${balance.toFixed(2)}`;
+                    result.style.color = 'black';
+                    break;
+                default:
+                    throw new Error('Operação inválida.');
+            }
+        } catch (error) {
+            result.textContent = error.message;
+            result.style.color = 'red';
+        } finally {
+            console.log('Operação realizada:', operation);
+        }
+    }
+</script>
+
+</body>
+</html>
+
